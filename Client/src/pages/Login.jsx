@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -18,9 +18,11 @@ import {
 } from "@/components/ui/tabs"
 import { useLoginUserMutation, useRegisterUserMutation } from "@/features/api/authApi"
 import { Loader2 } from "lucide-react"
+import { toast } from "sonner"
+import { useNavigate } from "react-router-dom"
 
 const Login = () => {
-  const [loginInput, setLoginInput] = useState({ email: "", password: "" })
+  const [loginInput, setLoginInput] = useState({ email: "" , password: "" })
   const [signupInput, setSignupInput] = useState({ name: "", email: "", password: "" })
   const [registerUser,
     {
@@ -29,6 +31,7 @@ const Login = () => {
       isLoading: registerIsLoading,
       isSuccess: registerIsSuccess,
     }] = useRegisterUserMutation();
+
   const [loginUser,
     {
       data: loginData,
@@ -37,7 +40,7 @@ const Login = () => {
       isSuccess: loginIsSuccess,
     }
   ] = useLoginUserMutation();
-
+  const navigate = useNavigate();
 
   const changeInputHandler = (e, type) => {
     const { name, value } = e.target
@@ -49,17 +52,39 @@ const Login = () => {
     }
   }
 
-  const handleRegistration =async (type) => {
+  const handleRegistration = async (type) => {
     const inputData = type === "signup" ? signupInput : loginInput;
     const action = type === "signup" ? registerUser : loginUser;
     await action(inputData);
   }
 
-  return (
-    <div className="flex items-center justify-center w-full">
+  useEffect(() => {
+    if (registerIsSuccess && registerData) {
+      toast.success(registerData?.message || "User registered successfully")
+    }
+    if (registerError) {
+      toast.error(registerError?.data?.message || "Something went wrong")
+    }
+    if (loginIsSuccess && loginData) {
+      toast.success(loginData?.message || "User logged in successfully")
+      navigate("/")
+    }
+    if (loginError) {
+      toast.error(loginError?.data?.message || "Something went wrong")
+    }
 
-      <Tabs defaultValue="account" className="w-[400px]">
-        <TabsList className="grid w-full grid-cols-2">
+  }, [
+    registerError,
+    registerIsSuccess,  
+    loginError,
+    loginIsSuccess
+  ])
+
+  return (
+    <div className="flex items-center justify-center mt-24 w-full">
+
+      <Tabs defaultValue="login" className="w-[400px]">
+        <TabsList className="grid w-full grid-cols-2" >
           <TabsTrigger value="signup">Signup</TabsTrigger>
           <TabsTrigger value="login">Login</TabsTrigger>
         </TabsList>
@@ -80,7 +105,7 @@ const Login = () => {
                   onChange={(e) => changeInputHandler(e, "signup")}
                   type="text"
                   placeholder="Harsh Donda"
-                  required='true'
+                  required
                 />
               </div>
               <div className="space-y-1">
@@ -91,7 +116,7 @@ const Login = () => {
                   onChange={(e) => changeInputHandler(e, "signup")}
                   type="email"
                   placeholder="xyz@email.com"
-                  required='true'
+                  required
                 />
               </div>
               <div className="space-y-1">
@@ -102,18 +127,18 @@ const Login = () => {
                   value={signupInput.password}
                   onChange={(e) => changeInputHandler(e, "signup")}
                   placeholder="password"
-                  required='true'
+                  required
                 />
               </div>
             </CardContent>
             <CardFooter>
               <Button disabled={registerIsLoading} onClick={(type) => handleRegistration("signup")}>
-              {
+                {
                   registerIsLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />Please wait...
                     </>
-                  ): "Signup"
+                  ) : "Signup"
                 }
               </Button>
             </CardFooter>
@@ -158,7 +183,7 @@ const Login = () => {
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />Please wait...
                     </>
-                  ): "Login"
+                  ) : "Login"
                 }
               </Button>
             </CardFooter>
