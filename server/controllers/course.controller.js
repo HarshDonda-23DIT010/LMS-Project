@@ -99,6 +99,7 @@ export const editCourse = async (req, res) => {
 
 export const getCourseById = async (req, res) => {
    try {
+      
       const courseId = req.params.courseId;
       const course = await Course.findById(courseId);
       if (!course) {
@@ -275,7 +276,7 @@ export const getLectureById = async (req, res) => {
 export const togglePublishCourse = async (req, res) => {
    try {
       const { courseId } = req.params;
-      const { publish } = req.query; 
+      const { publish } = req.query;
       const course = await Course.findById(courseId);
       if (!course) {
          return res.status(404).json({ message: "Course not found" });
@@ -293,3 +294,64 @@ export const togglePublishCourse = async (req, res) => {
       return res.status(500).json({ message: "Can't publish or unpublish the course" });
    }
 };
+
+
+export const getPublishedCourse = async (req, res) => {
+   try {
+      const courses = await Course.find({ isPublished: true }).populate({ path: "creater", select: 'name photoUrl' })
+      if (!courses) {
+         return res.status(404).json({
+            message: "No published course found"
+
+         })
+      }
+
+      return res.status(200).json({
+         message: "Courses get successfully",
+         courses
+      })
+   } catch (e) {
+      return res.status(500).json({ message: "Can't get published course" });
+   }
+}
+
+
+export const searchCourse = async (req, res) => {
+   try {
+      const { query = '', categories = [], sortByPrice = '' } = req.query
+      // create search query 
+      const seaechCriteria = {
+         isPublished: true,
+         $or: [
+            { courseTitle: { $regex: query, $options: 'i' } },
+            { subtitle: { $regex: query, $options: 'i' } },
+            { category: { $regex: query, $options: 'i' } },
+         ]
+      }
+
+      if (categories.length > 0) {
+         seaechCriteria.category = { $in: categories }
+      }
+      
+      //difine sorting array
+      const sortOptions = {};
+      if (sortByPrice === 'low') {
+         sortOptions.coursePrice = 1;
+      }
+      else if (sortByPrice === 'high') {
+         sortOptions.coursePrice = -1;
+      }
+
+      let courses = await Course.find(seaechCriteria).populate({ path: 'creater', select: 'name photoUrl' }).sort(sortOptions)
+
+      return res.status(200).json({
+         success: true,
+         courses: courses || []
+      })
+
+   } catch (e) {
+      console.log(e);
+      return res.status(500).json({ message: "No Course found" });
+      
+   }
+}

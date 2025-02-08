@@ -102,7 +102,8 @@ export const logout = async (req, res) => {
 export const getUserProfile = async (req, res) => {
    try {
       const userId = req.id;
-      const user = await User.findOne({ _id: userId }).select("-password");
+      let user = await User.findOne({ _id: userId }).select("-password").populate('enrolledCourses');
+      
       if (!user) {
          return res.status(404).json({
             success: false,

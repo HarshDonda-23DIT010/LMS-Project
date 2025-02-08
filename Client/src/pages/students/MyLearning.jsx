@@ -1,10 +1,12 @@
 import React from 'react'
 import Course from './Course'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useGetPurchasedCoursesQuery } from '@/features/api/purchaseApi'
 
 function MyLearning() {
-   const isLoading = false
-   const MyLearningCourses = [1, 2, 3, 4, 5, 6]
+   const { data  , isLoading} = useGetPurchasedCoursesQuery();
+   console.log(data);
+
    return (
       <div className='w-90% mx-12 px-4 mt-24 my-10 md:px-0'>
          <h1 className='font-bold text-center text-2xl'>MY LEARNING</h1>
@@ -12,12 +14,12 @@ function MyLearning() {
             {isLoading ? (
                <CoursesSkeleton />
             ) : (
-               MyLearningCourses.length === 0 ? (
-                  <p>You are not enrolled in any course</p>
+               data?.purchasedCourses.length === 0 ? (
+                  <p className='text-center'>You are not enrolled in any course</p>
                ) : (
                   <div className="flex flex-wrap justify-center gap-6">
-                     {MyLearningCourses.map((course, index) => (
-                        <Course key={index} />
+                     {data?.purchasedCourses.map((course, index) => (
+                        <Course key={index} course={course.courseId} />
                      ))}
                   </div>
                )

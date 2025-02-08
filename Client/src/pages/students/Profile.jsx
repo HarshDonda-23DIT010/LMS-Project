@@ -30,7 +30,6 @@ function Profile() {
    console.log(data)
    const user = data?.user
    
-   const navigate = useNavigate()
    const onChangeHandler = (e) => {
       const file = e.target.files?.[0]
       if (file) {
@@ -157,7 +156,7 @@ function Profile() {
                      <p className='text-center'>You are not enrolled in any course</p>
                   ) : (
                      <div className="flex flex-wrap justify-center gap-6">
-                        {user.enrolledCourses.map((course, index) => (
+                        {user.enrolledCourses.map((course) => (
                            <Course course={course} key={course._id} />
                         ))}
                      </div>

@@ -4,14 +4,14 @@ import { Link, Outlet } from 'react-router-dom'
 
 const Sidebar = () => {
    return (
-      <div className='flex'>
-         <div className='hidden mt-16 lg:block w-[250px] sm:w-[300px] space-y-8 border-r-gray-300 dark:border-r-gray-700 bg-[#f0f0f0] p-5 fixed top-0 h-screen'>
+      <div className='flex dark:bg-gray-900 '>
+         <div className='hidden mt-16 lg:block w-[250px] sm:w-[300px] space-y-8 dark:bg-gray-800 border-r-gray-300 dark:border-r-gray-700 bg-[#f0f0f0] p-5 fixed top-0 h-screen'>
             <div className='space-y-4'>
-               <Link className='hover:bg-gray-300 rounded-md p-2 flex items-center gap-2 mb-4' to="/admin/dashboard">
+               <Link className='hover:bg-gray-300 rounded-md p-2 dark:text-white dark:hover:bg-gray-700 flex items-center gap-2 mb-4' to="/admin/dashboard">
                   <ChartNoAxesColumn size={22} />
                   <h1>DashBoard</h1>
                </Link >
-               <Link className='hover:bg-gray-300 rounded-md p-2  flex items-center gap-2 mb-4' to="/admin/course">
+               <Link className='hover:bg-gray-300 rounded-md p-2  dark:hover:bg-gray-700  flex items-center gap-2 mb-4' to="/admin/course">
                   <SquareLibrary size={22} />
                   <h1>Courses</h1>
                </Link>

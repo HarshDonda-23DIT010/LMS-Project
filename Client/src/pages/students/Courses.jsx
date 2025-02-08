@@ -1,9 +1,13 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import React from 'react'
 import Course from './Course';
+import { useGetPublishedCourseQuery } from '@/features/api/courseApi';
 
 function Courses() {
-   const isLoading = false
+
+   const { data, isLoading, error, isSuccess } = useGetPublishedCourseQuery();
+   const courses = data?.courses
+   // console.log(courses);
 
    return (
       <div className='bg-gray-50 dark:bg-gray-950'>
@@ -12,14 +16,7 @@ function Courses() {
             <div className="flex flex-wrap justify-center gap-6">
                {
                   isLoading ? Array.from({ length: 8 }).map((_, i) => <CoursesSkeleton key={i} />) : (
-                     <>
-                        <Course />
-                        <Course />
-                        <Course />
-                        <Course />
-                        <Course />
-                        <Course />
-                     </>
+                     courses && courses.map((course, index) => <Course course={course} index={index} />)
                   )}
             </div>
 

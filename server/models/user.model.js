@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
    enrolledCourses:[
       {
          type:mongoose.Schema.Types.ObjectId,
-         fer: "Course"
+         ref: "Course"
       }
    ],
    photoUrl:{
