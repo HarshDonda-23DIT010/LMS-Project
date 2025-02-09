@@ -71,11 +71,13 @@ const LectureTab = () => {
 
    const [editLecture, { isLoading, isSuccess, data, error }] = useEditLectureMutation();
 
+   console.log(isFree);
+   
    const editLectureHandler = async () => {
       await editLecture({
          lectureTitle: title,
          isPreviewFree: isFree,
-         videoInfo: uploadVideoInfo,  // Send updated video info
+         videoInfo: uploadVideoInfo,
          courseId: courseId,
          lectureId: lectureId
       })
@@ -99,7 +101,7 @@ const LectureTab = () => {
       await removeLecture({ courseId, lectureId });
    }
 
-   
+
 
    useEffect(() => {
       if (removeIsSuccess) {
@@ -158,7 +160,11 @@ const LectureTab = () => {
                </div>
             )}
             <div>
-               <Switch id='free' value={isFree} checked={isFree} onCheckedChange={() => setIsfree(!isFree)} />
+               <Switch
+                  id='free'
+                  checked={isFree}
+                  onCheckedChange={(checked) => {setIsfree(checked)}}
+               />
                <Label className='ml-2' htmlFor='free'>This lecture is FREE?</Label>
             </div>
             {uploadVideoInfo?.videoUrl && (

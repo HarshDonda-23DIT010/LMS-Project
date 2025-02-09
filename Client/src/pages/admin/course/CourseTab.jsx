@@ -140,9 +140,9 @@ const CourseTab = () => {
                <CardDescription>Make changes to your courses here. Click save when you're done.</CardDescription>
             </div>
             <div className='flex gap-4'>
-               <Button
+               <Button 
                   variant='outline'
-                  className='bg-gray-300 shadow-sm'
+                  className='bg-gray-300 shadow-sm dark:hover:bg-gray-600 dark:bg-gray-700'
                   onClick={publishStatusHandler}
                   disabled={publishLoading || course?.lectures.length === 0}
                >
@@ -253,7 +253,7 @@ const CourseTab = () => {
                   }
                </div>
                <div className='flex gap-6'>
-                  <Button variant='outline' className='bg-gray-300 shadow-sm' onClick={() => { navigate("/admin/course") }} >Back</Button>
+                  <Button variant='outline' className='bg-gray-300 shadow-sm dark:bg-gray-700 dark:hover:bg-gray-600' onClick={() => { navigate("/admin/course") }} >Back</Button>
                   <Button onClick={updateCourseHandler} disabled={isLoading}>
                      {
                         isLoading ? (

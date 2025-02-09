@@ -17,6 +17,9 @@ import EditLecture from './pages/admin/lecture/EditLecture';
 import CourseDetail from './pages/students/CourseDetail';
 import CourseProgress from './pages/students/CourseProgress';
 import SearchaPage from './pages/students/SearchaPage';
+import { AdminRoute, AuthenticatedUser, ProtectedRoute } from './components/ProtectedRoutes';
+import { PurchaseCourseProtectedRoute } from './components/PurchasedCourseProtectedRoute';
+import { ThemeProvider } from './components/TheamProvider';
 
 const appRouter = createBrowserRouter([
   {
@@ -34,33 +37,37 @@ const appRouter = createBrowserRouter([
       },
       {
         path: "login",
-        element: <Login />
+        element: <AuthenticatedUser> <Login /> </AuthenticatedUser>
       },
       {
         path: "my-learning",
-        element: <MyLearning />
+        element: <ProtectedRoute>  <MyLearning /> </ProtectedRoute>
       },
       {
         path: "profile",
-        element: <Profile />
+        element: <ProtectedRoute> <Profile /> </ProtectedRoute>
       },
       {
         path: "course/search",
-        element: <SearchaPage />
+        element: <ProtectedRoute> <SearchaPage /> </ProtectedRoute>
       },
-      
+
       {
         path: "course-detail/:courseId",
-        element: <CourseDetail />
+        element: <ProtectedRoute> <CourseDetail /> </ProtectedRoute>
       },
       {
         path: "course-progress/:courseId",
-        element: <CourseProgress />
+        element: <PurchaseCourseProtectedRoute>
+          <ProtectedRoute>
+            <CourseProgress />
+          </ProtectedRoute>
+        </PurchaseCourseProtectedRoute>
       },
       // admin route
       {
         path: "admin",
-        element: <Sidebar />,
+        element: <AdminRoute><Sidebar /></AdminRoute>,
         children: [
           {
             path: "dashboard",
@@ -98,9 +105,11 @@ const appRouter = createBrowserRouter([
 function App() {
   return (
     <main>
+      <ThemeProvider>
       <RouterProvider router={appRouter}>
 
       </RouterProvider>
+      </ThemeProvider>
     </main>
   );
 }

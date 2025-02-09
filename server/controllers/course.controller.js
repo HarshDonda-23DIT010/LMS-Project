@@ -99,7 +99,7 @@ export const editCourse = async (req, res) => {
 
 export const getCourseById = async (req, res) => {
    try {
-      
+
       const courseId = req.params.courseId;
       const course = await Course.findById(courseId);
       if (!course) {
@@ -186,16 +186,19 @@ export const editLecture = async (req, res) => {
    try {
       const { lectureId, courseId } = req.params;
       const { lectureTitle, isPreviewFree, videoInfo } = req.body;
-      const lecture = await Lecture.findById(lectureId)
+      console.log(isPreviewFree);
+
+      let lecture = await Lecture.findById(lectureId);
       if (!lecture) {
          return req.status(404).json({
             message: "Lecture not found"
          })
       }
+
       //update lecture
-      if (lectureTitle) lecture.lectureTitle = lectureTitle
+      if (lectureTitle !== undefined) lecture.lectureTitle = lectureTitle
       if (videoInfo?.videoUrl) lecture.videoUrl = videoInfo.videoUrl
-      if (isPreviewFree) lecture.isPreviewFree = isPreviewFree
+      if (isPreviewFree !== undefined) lecture.isPreviewFree = isPreviewFree
       if (videoInfo?.publicId) lecture.publicId = videoInfo.publicId
 
       await lecture.save()
@@ -332,7 +335,7 @@ export const searchCourse = async (req, res) => {
       if (categories.length > 0) {
          seaechCriteria.category = { $in: categories }
       }
-      
+
       //difine sorting array
       const sortOptions = {};
       if (sortByPrice === 'low') {
@@ -352,6 +355,6 @@ export const searchCourse = async (req, res) => {
    } catch (e) {
       console.log(e);
       return res.status(500).json({ message: "No Course found" });
-      
+
    }
 }
